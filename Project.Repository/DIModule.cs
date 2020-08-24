@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Ninject.Modules;
 using AutoMapper;
-using Project.DAL.Entities;
+using Project.DAL;
 using Project.Models;
 using Project.Models.Common;
+using Project.DAL.Contexts;
+using Project.Repository.Common;
+using Project.DAL.Entities;
 
 namespace Project.Repository
 {
@@ -20,6 +23,9 @@ namespace Project.Repository
             Mapper.CreateMap<VehicleModelEntity, VehicleModel>().ReverseMap();
             Mapper.CreateMap<VehicleModelEntity, IVehicleModel>().ReverseMap();
             Mapper.CreateMap<IVehicleModel, VehicleModel>().ReverseMap();
+
+            Bind<IVehicleContext>().To<VehicleContext>().InSingletonScope();
+            Bind<IVehicleRepository>().To<VehicleRepository>();
         }
     }
 }

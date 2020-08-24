@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Project.DAL.Contexts;
+using Project.DAL;
 
 namespace Project.WebAPI.Migrations
 {
@@ -33,7 +33,7 @@ namespace Project.WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MakesEntities");
+                    b.ToTable("Makes");
                 });
 
             modelBuilder.Entity("Project.DAL.Entities.VehicleModelEntity", b =>
@@ -56,7 +56,7 @@ namespace Project.WebAPI.Migrations
 
                     b.HasIndex("MakeId");
 
-                    b.ToTable("ModelsEntities");
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("Project.DAL.Entities.VehicleModelEntity", b =>

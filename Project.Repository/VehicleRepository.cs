@@ -9,12 +9,13 @@ using AutoMapper;
 using Project.Models;
 using Project.DAL.Entities;
 using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project.Repository
 {
     public class VehicleRepository : IVehicleRepository, IDisposable
     {
-        public IVehicleContext Context { get; private set; }
+        protected IVehicleContext Context { get; private set; }
 
         public VehicleRepository(IVehicleContext context)
         {
@@ -26,54 +27,54 @@ namespace Project.Repository
             await Context.DisposeAsync();
         }
 
-        public ICollection<IVehicleMake> GetVehicleMakeAsync()
+        public async Task<ICollection<IVehicleMake>> GetVehicleMakeAsync()
         {
-            return new List<IVehicleMake>(Mapper.Map<List<VehicleMake>>(Context.Makes));
+            return new List<IVehicleMake>(Mapper.Map<List<VehicleMake>>(await Context.Makes.ToListAsync()));
         }
 
-        public ICollection<IVehicleModel> GetVehicleModelAsync()
+        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync()
         {
-            return new List<IVehicleModel>(Mapper.Map<List<VehicleModel>>(Context.Models));
+            return new List<IVehicleModel>(Mapper.Map<List<VehicleModel>>(await Context.Models.ToListAsync()));
         }
 
-        public IVehicleMake GetVehicleMakeAsync(int id)
+        public async Task<IVehicleMake> GetVehicleMakeAsync(int id)
         {
-            return Mapper.Map<VehicleMake>(Context.Makes.FirstOrDefault(x => x.Id == id));
+            return Mapper.Map<IVehicleMake>(await Context.Makes.FirstOrDefaultAsync(x => x.Id == id));
         }
 
-        public IVehicleModel GetVehicleModelAsync(int id)
+        public async Task<IVehicleModel> GetVehicleModelAsync(int id)
         {
-            return Mapper.Map<VehicleModel>(Context.Models.FirstOrDefault(x => x.Id == id));
+            return Mapper.Map<IVehicleModel>(await Context.Models.FirstOrDefaultAsync(x => x.Id == id));
         }
 
-        public void AddVehicleMakeAsync(IVehicleMake entity)
+        public async Task AddVehicleMakeAsync(IVehicleMake entity)
         {
-            Context.Makes.Add(Mapper.Map<VehicleMakeEntity>(entity));
+            await Context.Makes.AddAsync(Mapper.Map<VehicleMakeEntity>(entity));
         }
 
-        public void AddVehicleModelAsync(IVehicleModel entity)
+        public async Task AddVehicleModelAsync(IVehicleModel entity)
         {
-            Context.Models.Add(Mapper.Map<VehicleModelEntity>(entity));
+            await Context.Models.AddAsync(Mapper.Map<VehicleModelEntity>(entity));
         }
 
-        public void UpdateVehicleMakeAsync(IVehicleMake entity)
+        public async Task UpdateVehicleMakeAsync(IVehicleMake entity)
         {
-            Context.Makes.Update(Mapper.Map<VehicleMakeEntity>(entity));
+            await Task.Run(() => Context.Makes.Update(Mapper.Map<VehicleMakeEntity>(entity)));
         }
 
-        public void UpdateVehicleModelAsync(IVehicleModel entity)
+        public async Task UpdateVehicleModelAsync(IVehicleModel entity)
         {
-            Context.Models.Update(Mapper.Map<VehicleModelEntity>(entity));
+            await Task.Run(() => Context.Models.Update(Mapper.Map<VehicleModelEntity>(entity)));
         }
 
-        public void DeleteVehicleMakeAsync(IVehicleMake entity)
+        public async Task DeleteVehicleMakeAsync(int id)
         {
-            Context.Makes.Remove(Mapper.Map<VehicleMakeEntity>(entity));
+            Context.Makes.Remove(await Context.Makes.FirstOrDefaultAsync(x => x.Id == id));
         }
 
-        public void DeleteVehicleModelAsync(IVehicleModel entity)
+        public async Task DeleteVehicleModelAsync(int id)
         {
-            Context.Models.Remove(Mapper.Map<VehicleModelEntity>(entity));
+            Context.Models.Remove(await Context.Models.FirstOrDefaultAsync(x => x.Id == id));
         }
 
         public async Task<int> CommitAsync()

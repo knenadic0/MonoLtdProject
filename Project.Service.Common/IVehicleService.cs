@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Repository.Common
+namespace Project.Service.Common
 {
-    public interface IVehicleRepository : IDisposable
+    public interface IVehicleService
     {
         Task<ICollection<IVehicleMake>> GetVehicleMakeAsync();
         Task<ICollection<IVehicleModel>> GetVehicleModelAsync();
@@ -22,7 +22,5 @@ namespace Project.Repository.Common
 
         Task DeleteVehicleMakeAsync(int id);
         Task DeleteVehicleModelAsync(int id);
-
-        Task<int> CommitAsync();
     }
 }

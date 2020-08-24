@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.DAL.Contexts;
 using Project.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.DAL.Contexts
+namespace Project.DAL
 {
     public class VehicleContext : DbContext, IVehicleContext
     {
