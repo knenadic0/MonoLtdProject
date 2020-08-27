@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Project.DAL.Contexts;
 using Project.Models;
 using Project.Models.Common;
 using Project.Service.Common;
+using Project.WebAPI.Models;
 using Project.WebAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,31 +20,33 @@ namespace Project.WebAPI.Controllers
     [Route("Makes")]
     public class VehicleMakeController : ControllerBase
     {
-        protected IVehicleService Service { get; private set; }
+        protected IVehicleMakeService Service { get; private set; }
+        protected IMapper Mapper { get; private set; }
 
-        public VehicleMakeController(IVehicleService service)
+        public VehicleMakeController(IVehicleMakeService service, IMapper mapper)
         {
             Service = service;
+            Mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ICollection<IVehicleMake>> GetMakesAsync()
+        public async Task<ICollection<VehicleMakeModel>> GetMakesAsync()
         {
-            return await Service.GetVehicleMakeAsync();
+            return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<IVehicleMake> GetMakeAsync(int id)
+        public async Task<VehicleMakeModel> GetMakeAsync(int id)
         {
-            return await Service.GetVehicleMakeAsync(id);
+            return Mapper.Map<VehicleMakeModel>(await Service.GetVehicleMakeAsync(id));
         }
 
         [HttpPost("Add")]
-        public async Task<HttpResponseMessage> AddAsync(VehicleMake make)
+        public async Task<HttpResponseMessage> AddAsync(VehicleMakeModel make)
         {
             try
             {
-                await Service.AddVehicleMakeAsync(make);
+                await Service.AddVehicleMakeAsync(Mapper.Map<VehicleMake>(make));
             }
             catch (Exception)
             {
@@ -53,11 +57,11 @@ namespace Project.WebAPI.Controllers
         }
 
         [HttpPost("Update")]
-        public async Task<HttpResponseMessage> UpdateAsync(VehicleMake make)
+        public async Task<HttpResponseMessage> UpdateAsync(VehicleMakeModel make)
         {
             try
             {
-                await Service.UpdateVehicleMakeAsync(make);
+                await Service.UpdateVehicleMakeAsync(Mapper.Map<VehicleMake>(make));
             }
             catch (Exception)
             {

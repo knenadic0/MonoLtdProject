@@ -6,21 +6,16 @@ using System.Threading.Tasks;
 
 namespace Project.Repository.Common
 {
-    public interface IVehicleRepository : IDisposable
+    public interface IVehicleModelRepository : IDisposable
     {
-        Task<ICollection<IVehicleMake>> GetVehicleMakeAsync();
         Task<ICollection<IVehicleModel>> GetVehicleModelAsync();
 
-        Task<IVehicleMake> GetVehicleMakeAsync(int id);
         Task<IVehicleModel> GetVehicleModelAsync(int id);
 
-        Task AddVehicleMakeAsync(IVehicleMake entity);
-        Task AddVehicleModelAsync(IVehicleModel entity);
+        void AddVehicleModelAsync(IVehicleModel entity);
 
-        Task UpdateVehicleMakeAsync(IVehicleMake entity);
         Task UpdateVehicleModelAsync(IVehicleModel entity);
 
-        Task DeleteVehicleMakeAsync(int id);
         Task DeleteVehicleModelAsync(int id);
 
         Task<int> CommitAsync();

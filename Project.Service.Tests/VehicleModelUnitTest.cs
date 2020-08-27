@@ -12,19 +12,19 @@ namespace Project.Service.Tests
 {
     public class VehicleModelUnitTest
     {
-        private readonly VehicleService service;
+        private readonly VehicleMakeService service;
 
-        public VehicleModelUnitTest()
-        {
-            this.service = new VehicleService(new VehicleRepository(new TestContext()));
-        }
+        //public VehicleModelUnitTest()
+        //{
+        //    //this.service = new VehicleMakeService(new VehicleMakeRepository(new TestContext()));
+        //}
 
-        [Fact]
-        public async System.Threading.Tasks.Task GetModelsAsync()
-        {
-            ICollection<IVehicleModel> models = await service.GetVehicleModelAsync();
+        //[Fact]
+        //public async System.Threading.Tasks.Task GetModelsAsync()
+        //{
+        //    //ICollection<IVehicleModel> models = await service.GetVehicleModelAsync();
 
-            models.Should().HaveCount(4);
-        }
+        //    models.Should().HaveCount(4);
+        //}
     }
 }

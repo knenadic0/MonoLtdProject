@@ -51,8 +51,10 @@ namespace Project.WebAPI
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
-            containerBuilder.RegisterType<VehicleRepository>().As<IVehicleRepository>();
+            containerBuilder.RegisterType<GenericVehicleMakeService>().As<IVehicleMakeService>();
+            containerBuilder.RegisterType<GenericVehicleModelService>().As<IVehicleModelService>();
+            containerBuilder.RegisterType<VehicleMakeRepository>().As<IVehicleMakeRepository>();
+            containerBuilder.RegisterType<VehicleModelRepository>().As<IVehicleModelRepository>();
             containerBuilder.RegisterType<VehicleContext>().As<IVehicleContext>();
             containerBuilder.RegisterType<Mapper>().As<IMapper>();
         }
