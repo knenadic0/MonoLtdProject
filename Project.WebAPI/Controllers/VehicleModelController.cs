@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Project.Models;
 using Project.Models.Common;
 using Project.Service.Common;
+using Project.WebAPI.ViewModels;
 
 namespace Project.WebAPI.Controllers
 {
-    public class VehicleModelController : Controller
+    [ApiController]
+    [Route("Models")]
+    public class VehicleModelController : ControllerBase
     {
         protected IVehicleService Service { get; private set; }
 
@@ -17,37 +23,62 @@ namespace Project.WebAPI.Controllers
             Service = service;
         }
 
-        [System.Web.Http.HttpGet]
-        public async Task<ICollection<IVehicleModel>> GetAsync()
+        [HttpGet]
+        public async Task<ICollection<IVehicleModel>> GetModelsAsync()
         {
-            return await Service.GetVehicleModelAsync();
+            var hue = await Service.GetVehicleModelAsync();
+            return hue;
         }
 
-        [System.Web.Http.HttpGet]
-        public async Task<IVehicleModel> GetAsync(int id)
+        [HttpGet("{id}")]
+        public async Task<IVehicleModel> GetModelAsync(int id)
         {
             return await Service.GetVehicleModelAsync(id);
         }
 
-        [System.Web.Http.HttpPost]
-        public async Task<IActionResult> AddAsync(IVehicleModel model)
+        [HttpPost("Add")]
+        public async Task<HttpResponseMessage> AddAsync(VehicleModel model)
         {
-            await Service.AddVehicleModelAsync(model);
-            return Ok();
+            try
+            {
+                await Service.AddVehicleModelAsync(model);
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        [System.Web.Http.HttpPost]
-        public async Task<IActionResult> UpdateAsync(IVehicleModel model)
+        [HttpPost("Update")]
+        public async Task<HttpResponseMessage> UpdateAsync(VehicleModel model)
         {
-            await Service.UpdateVehicleModelAsync(model);
-            return Ok();
+            try
+            {
+                await Service.UpdateVehicleModelAsync(model);
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        [System.Web.Http.HttpPost]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpPost("Delete")]
+        public async Task<HttpResponseMessage> DeleteAsync(DeleteById id)
         {
-            await Service.DeleteVehicleModelAsync(id);
-            return Ok();
+            try
+            {
+                await Service.DeleteVehicleModelAsync(id.Id);
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

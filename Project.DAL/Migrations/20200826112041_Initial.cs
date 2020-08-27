@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Project.WebAPI.Migrations
+namespace Project.DAL.Migrations
 {
-    public partial class inital : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "MakesEntities",
+                name: "Makes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -18,11 +18,11 @@ namespace Project.WebAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MakesEntities", x => x.Id);
+                    table.PrimaryKey("PK_Makes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModelsEntities",
+                name: "Models",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -33,28 +33,28 @@ namespace Project.WebAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModelsEntities", x => x.Id);
+                    table.PrimaryKey("PK_Models", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ModelsEntities_MakesEntities_MakeId",
+                        name: "FK_Models_Makes_MakeId",
                         column: x => x.MakeId,
-                        principalTable: "MakesEntities",
+                        principalTable: "Makes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModelsEntities_MakeId",
-                table: "ModelsEntities",
+                name: "IX_Models_MakeId",
+                table: "Models",
                 column: "MakeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ModelsEntities");
+                name: "Models");
 
             migrationBuilder.DropTable(
-                name: "MakesEntities");
+                name: "Makes");
         }
     }
 }

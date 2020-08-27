@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Project.DAL;
 
-namespace Project.WebAPI.Migrations
+namespace Project.DAL.Migrations
 {
     [DbContext(typeof(VehicleContext))]
     partial class VehicleContextModelSnapshot : ModelSnapshot

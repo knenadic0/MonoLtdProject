@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Project.DAL;
 
-namespace Project.WebAPI.Migrations
+namespace Project.DAL.Migrations
 {
     [DbContext(typeof(VehicleContext))]
-    [Migration("20200814144832_inital")]
-    partial class inital
+    [Migration("20200826112041_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace Project.WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MakesEntities");
+                    b.ToTable("Makes");
                 });
 
             modelBuilder.Entity("Project.DAL.Entities.VehicleModelEntity", b =>
@@ -58,7 +58,7 @@ namespace Project.WebAPI.Migrations
 
                     b.HasIndex("MakeId");
 
-                    b.ToTable("ModelsEntities");
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("Project.DAL.Entities.VehicleModelEntity", b =>

@@ -25,6 +25,11 @@ namespace Project.DAL
         //{
         //}
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Username=postgres;Password=mckacko;Database=mono;");
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
