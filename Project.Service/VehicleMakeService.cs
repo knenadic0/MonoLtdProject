@@ -32,7 +32,7 @@ namespace Project.Service
         }
 
         public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(Expression<Func<VehicleMakeEntity, bool>> filter = null,
-            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, string includeProperties = "", int page = 1)
+            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, string includeProperties = "", int pageSize = 10, int page = 1)
         {
             return await Repository.GetVehicleMakeAsync();
         }

@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using Project.DAL.Contexts;
+using Project.DAL.Entities;
 using Project.Models;
 using Project.Models.Common;
 using Project.Service.Common;
@@ -9,8 +12,12 @@ using Project.WebAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 
@@ -30,9 +37,35 @@ namespace Project.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ICollection<VehicleMakeModel>> GetMakesAsync()
+        public async Task<ICollection<VehicleMakeModel>> GetMakesAsync(string filter = null, string include = "", 
+            string orderBy = "", int pageSize = 10, int page = 1)
         {
-            return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync());
+            Expression<Func<VehicleMakeEntity, bool>> _filter = null;
+            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> _orderBy = null;
+
+            if (filter != null)
+            {
+                ParameterExpression parExp = Expression.Parameter(typeof(VehicleMakeEntity), "x");
+                Expression exp = DynamicExpressionParser.ParseLambda(new[] { parExp }, null, filter);
+                _filter = (Expression<Func<VehicleMakeEntity, bool>>)exp;
+            }
+            if (orderBy != string.Empty)
+            {
+                ParameterExpression parExp = Expression.Parameter(typeof(VehicleMakeEntity), "x");
+                LambdaExpression exp = DynamicExpressionParser.ParseLambda(new[] { parExp }, null, orderBy);
+                string type = exp.ReturnType.Name;
+                switch (type)
+                {
+                    case "Int32":
+                        _orderBy = x => x.OrderBy((Expression<Func<VehicleMakeEntity, int>>)exp);
+                        break;
+                    default:
+                        _orderBy = x => x.OrderBy((Expression<Func<VehicleMakeEntity, string>>)exp);
+                        break;
+                }
+            }
+
+            return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync(_filter, _orderBy, include, pageSize, page));
         }
 
         [HttpGet("{id}")]

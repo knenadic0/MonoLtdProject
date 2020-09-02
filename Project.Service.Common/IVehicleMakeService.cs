@@ -14,7 +14,7 @@ namespace Project.Service.Common
     {
         Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(Expression<Func<VehicleMakeEntity, bool>> filter = null,
             Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, 
-            string includeProperties = "", int page = 1);
+            string includeProperties = "", int pageSize = 10, int page = 1);
 
         Task<IVehicleMake> GetVehicleMakeAsync(int id);
 

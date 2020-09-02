@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using Project.DAL;
 using System.Threading.Tasks;
 using PagedList;
+using Project.Common;
 
 namespace Project.Repository
 {
@@ -22,27 +23,22 @@ namespace Project.Repository
         }
 
         public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", int page = 1)
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "", 
+            int pageSize = 10, int page = 1)
         {
             IQueryable<TEntity> query = dbSet;
-            int pageSize = 3;
 
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
+            query = query.FilterSet(filter);
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
+            query = query.Order(orderBy);
 
-            if (orderBy != null)
+            try
             {
-                return orderBy(query).ToPagedList(pageSize, page);
+                IQueryable<TEntity> query1 = query;
+                query1 = query1.IncludeEntities(includeProperties);
+                return query1.ToPagedList(page, pageSize);
             }
-            else
+            catch (Exception)
             {
                 return query.ToPagedList(page, pageSize);
             }

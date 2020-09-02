@@ -40,14 +40,15 @@ namespace Project.Service
         }
 
         public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(Expression<Func<VehicleMakeEntity, bool>> filter = null,
-            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, string includeProperties = "", int page = 1)
+            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, 
+            string includeProperties = "", int pageSize = 10, int page = 1)
         {
             //Expression<Func<VehicleMakeEntity, bool>> filterEntity = 
             //    Mapper.Map<Expression<Func<VehicleMakeEntity, bool>>>(filter);
             //Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderByEntity = 
             //    Mapper.Map<Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>>>(orderBy);
 
-            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(filter, orderBy, includeProperties, page));
+            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(filter, orderBy, includeProperties, pageSize, page));
         }
 
         public async Task<IVehicleMake> GetVehicleMakeAsync(int id)

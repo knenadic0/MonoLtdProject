@@ -34,7 +34,7 @@ namespace Project.Service
 
         public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(Expression<Func<VehicleModelEntity, bool>> filter = null,
             Func<IQueryable<VehicleModelEntity>, IOrderedQueryable<VehicleModelEntity>> orderBy = null,
-            string includeProperties = "", int page = 1)
+            string includeProperties = "", int pageSize = 10, int page = 1)
         {
             return await Repository.GetVehicleModelAsync();
         }
