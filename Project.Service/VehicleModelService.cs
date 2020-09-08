@@ -1,4 +1,5 @@
-﻿using Project.DAL.Entities;
+﻿using Project.Common;
+using Project.DAL.Entities;
 using Project.Models.Common;
 using Project.Repository.Common;
 using Project.Service.Common;
@@ -32,9 +33,7 @@ namespace Project.Service
             await Repository.CommitAsync();
         }
 
-        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(Expression<Func<VehicleModelEntity, bool>> filter = null,
-            Func<IQueryable<VehicleModelEntity>, IOrderedQueryable<VehicleModelEntity>> orderBy = null,
-            string includeProperties = "", int pageSize = 10, int page = 1)
+        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams getParams)
         {
             return await Repository.GetVehicleModelAsync();
         }

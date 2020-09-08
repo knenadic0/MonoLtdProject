@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Project.DAL.Contexts;
 using Project.DAL.Entities;
 using Project.Models;
-using Project.Models.Common;
+using Project.Common;
 using Project.Service.Common;
 using Project.WebAPI.Models;
 using Project.WebAPI.ViewModels;
@@ -37,35 +37,33 @@ namespace Project.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ICollection<VehicleMakeModel>> GetMakesAsync(string filter = null, string include = "", 
-            string orderBy = "", int pageSize = 10, int page = 1)
+        public async Task<ICollection<VehicleMakeModel>> GetMakesAsync(string filterColumn = "", 
+            string filterValue = "", int filterOption = 3, string sortBy = "", 
+            int sortOrder = 1, int pageSize = 10, int page = 1)
         {
-            Expression<Func<VehicleMakeEntity, bool>> _filter = null;
-            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> _orderBy = null;
-
-            if (filter != null)
+            GetParams getParams = new GetParams()
             {
-                ParameterExpression parExp = Expression.Parameter(typeof(VehicleMakeEntity), "x");
-                Expression exp = DynamicExpressionParser.ParseLambda(new[] { parExp }, null, filter);
-                _filter = (Expression<Func<VehicleMakeEntity, bool>>)exp;
-            }
-            if (orderBy != string.Empty)
-            {
-                ParameterExpression parExp = Expression.Parameter(typeof(VehicleMakeEntity), "x");
-                LambdaExpression exp = DynamicExpressionParser.ParseLambda(new[] { parExp }, null, orderBy);
-                string type = exp.ReturnType.Name;
-                switch (type)
-                {
-                    case "Int32":
-                        _orderBy = x => x.OrderBy((Expression<Func<VehicleMakeEntity, int>>)exp);
-                        break;
-                    default:
-                        _orderBy = x => x.OrderBy((Expression<Func<VehicleMakeEntity, string>>)exp);
-                        break;
-                }
-            }
+                PageNumber = page,
+                PageSize = pageSize
+            };
 
-            return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync(_filter, _orderBy, include, pageSize, page));
+            FilterParams filterParams = new FilterParams()
+            {
+                ColumnName = filterColumn,
+                FilterValue = filterValue,
+                FilterOption = (FilterOptions)filterOption
+            };
+
+            SortingParams sortingParams = new SortingParams()
+            {
+                ColumnName = sortBy,
+                SortOrder = (SortOrders)sortOrder
+            };
+
+            getParams.FilterParam = new[] { filterParams };
+            getParams.SortingParams = new[] { sortingParams };
+
+            return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync(getParams));
         }
 
         [HttpGet("{id}")]

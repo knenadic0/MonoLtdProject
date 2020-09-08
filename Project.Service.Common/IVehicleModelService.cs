@@ -1,4 +1,5 @@
-﻿using Project.DAL.Entities;
+﻿using Project.Common;
+using Project.DAL.Entities;
 using Project.Models.Common;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,7 @@ namespace Project.Service.Common
 {
     public interface IVehicleModelService
     {
-        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(Expression<Func<VehicleModelEntity, bool>> filter = null,
-            Func<IQueryable<VehicleModelEntity>, IOrderedQueryable<VehicleModelEntity>> orderBy = null,
-            string includeProperties = "", int pageSize = 10, int page = 1);
+        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams getParams);
 
         Task<IVehicleModel> GetVehicleModelAsync(int id);
 

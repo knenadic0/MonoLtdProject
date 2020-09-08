@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Project.Common;
 using Project.DAL.Entities;
 using Project.Models;
 using Project.Models.Common;
@@ -39,16 +40,9 @@ namespace Project.Service
             await unitOfWork.SaveAsync();
         }
 
-        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(Expression<Func<VehicleMakeEntity, bool>> filter = null,
-            Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderBy = null, 
-            string includeProperties = "", int pageSize = 10, int page = 1)
+        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams getParams)
         {
-            //Expression<Func<VehicleMakeEntity, bool>> filterEntity = 
-            //    Mapper.Map<Expression<Func<VehicleMakeEntity, bool>>>(filter);
-            //Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>> orderByEntity = 
-            //    Mapper.Map<Func<IQueryable<VehicleMakeEntity>, IOrderedQueryable<VehicleMakeEntity>>>(orderBy);
-
-            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(filter, orderBy, includeProperties, pageSize, page));
+            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(getParams));
         }
 
         public async Task<IVehicleMake> GetVehicleMakeAsync(int id)
