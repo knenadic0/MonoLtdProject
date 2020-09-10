@@ -40,9 +40,9 @@ namespace Project.Service
             await unitOfWork.SaveAsync();
         }
 
-        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams getParams)
+        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams<VehicleMake> getParams)
         {
-            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(getParams));
+            return Mapper.Map<ICollection<IVehicleMake>>(await Repository.Get(Mapper.Map<GetParams<VehicleMakeEntity>>(getParams)));
         }
 
         public async Task<IVehicleMake> GetVehicleMakeAsync(int id)

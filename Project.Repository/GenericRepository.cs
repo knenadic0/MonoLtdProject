@@ -22,15 +22,13 @@ namespace Project.Repository
             this.dbSet = context.Set<TEntity>();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> Get(GetParams getParams)
+        public virtual async Task<IEnumerable<TEntity>> Get(GetParams<TEntity> getParams)
         {
             IQueryable<TEntity> query = dbSet;
 
-            query = Filter<TEntity>.FilteredData(query, getParams.FilterParam).AsQueryable();
-
-            query = Sort<TEntity>.SortData(query, getParams.SortingParams).AsQueryable();
-
-            return query.ToPagedList(getParams.PageNumber, getParams.PageSize);
+            query = Filter<TEntity>.FilteredData(query, getParams.FilterParam);
+            query = Sort<TEntity>.SortData(query, getParams.SortingParam);
+            return (await PagedResult<TEntity>.GetPagedAsync(query, getParams.PageNumber, getParams.PageSize)).Results;
         }
 
         public virtual async Task<TEntity> GetByID(object id)

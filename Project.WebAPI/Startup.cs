@@ -8,24 +8,17 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Ninject;
-using Ninject.Activation;
-using Ninject.Infrastructure.Disposal;
+using Project.Common;
 using Project.DAL;
 using Project.DAL.Contexts;
 using Project.Repository;
 using Project.Repository.Common;
 using Project.Service;
 using Project.Service.Common;
+using Project.WebAPI.Modules;
 
 namespace Project.WebAPI
 {
@@ -51,12 +44,10 @@ namespace Project.WebAPI
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<GenericVehicleMakeService>().As<IVehicleMakeService>();
-            containerBuilder.RegisterType<GenericVehicleModelService>().As<IVehicleModelService>();
-            containerBuilder.RegisterType<VehicleMakeRepository>().As<IVehicleMakeRepository>();
-            containerBuilder.RegisterType<VehicleModelRepository>().As<IVehicleModelRepository>();
-            containerBuilder.RegisterType<VehicleContext>().As<IVehicleContext>();
-            containerBuilder.RegisterType<Mapper>().As<IMapper>();
+            containerBuilder.RegisterModule(new ServiceDIModule());
+            containerBuilder.RegisterModule(new RepositoryDIModule());
+            containerBuilder.RegisterModule(new DALDIModule());
+            containerBuilder.RegisterModule(new WebAPIDIModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

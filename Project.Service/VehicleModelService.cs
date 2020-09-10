@@ -33,7 +33,7 @@ namespace Project.Service
             await Repository.CommitAsync();
         }
 
-        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams getParams)
+        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModelEntity> getParams)
         {
             return await Repository.GetVehicleModelAsync();
         }

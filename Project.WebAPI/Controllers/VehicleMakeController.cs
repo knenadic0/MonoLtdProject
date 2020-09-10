@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
-using Project.DAL.Contexts;
-using Project.DAL.Entities;
 using Project.Models;
 using Project.Common;
 using Project.Service.Common;
@@ -12,14 +8,12 @@ using Project.WebAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
+using Project.DAL.Entities;
 
 namespace Project.WebAPI.Controllers
 {
@@ -41,7 +35,7 @@ namespace Project.WebAPI.Controllers
             string filterValue = "", int filterOption = 3, string sortBy = "", 
             int sortOrder = 1, int pageSize = 10, int page = 1)
         {
-            GetParams getParams = new GetParams()
+            GetParams<VehicleMake> getParams = new GetParams<VehicleMake>()
             {
                 PageNumber = page,
                 PageSize = pageSize
@@ -61,7 +55,7 @@ namespace Project.WebAPI.Controllers
             };
 
             getParams.FilterParam = new[] { filterParams };
-            getParams.SortingParams = new[] { sortingParams };
+            getParams.SortingParam = new[] { sortingParams };
 
             return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync(getParams));
         }

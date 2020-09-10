@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,7 +33,7 @@ namespace Project.Common
 
     public class Filter<T> where T : class
     {
-        public static IEnumerable<T> FilteredData(IEnumerable<T> data, IEnumerable<FilterParams> filterParams)
+        public static IQueryable<T> FilteredData(IQueryable<T> data, IEnumerable<FilterParams> filterParams)
         {
             if (filterParams == null)
             {
@@ -51,7 +52,7 @@ namespace Project.Common
 
                     if (filterValues.Count() > 1)
                     {
-                        IEnumerable<T> sameColData = Enumerable.Empty<T>();
+                        IQueryable<T> sameColData = Queryable.DefaultIfEmpty(data);
 
                         foreach (var val in filterValues)
                         {
@@ -69,7 +70,7 @@ namespace Project.Common
             return data;
         }
 
-        private static IEnumerable<T> FilterData(FilterOptions filterOption, IEnumerable<T> data, PropertyInfo filterColumn, string filterValue)
+        private static IQueryable<T> FilterData(FilterOptions filterOption, IQueryable<T> data, PropertyInfo filterColumn, string filterValue)
         {
             int outValue;
             DateTime dateValue;
@@ -79,24 +80,24 @@ namespace Project.Common
                 #region [StringDataType]  
 
                 case FilterOptions.StartsWith:
-                    data = data.Where(x => filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower().StartsWith(filterValue.ToString().ToLower())).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToLower().StartsWith(filterValue.ToString().ToLower()));
                     break;
                 case FilterOptions.EndsWith:
-                    data = data.Where(x => filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower().EndsWith(filterValue.ToString().ToLower())).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToLower().EndsWith(filterValue.ToString().ToLower()));
                     break;
                 case FilterOptions.Contains:
-                    data = data.Where(x => filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower().Contains(filterValue.ToString().ToLower())).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToLower().Contains(filterValue.ToString().ToLower()));
                     break;
                 case FilterOptions.DoesNotContain:
-                    data = data.Where(x => filterColumn.GetValue(x, null) == null ||
-                                     (filterColumn.GetValue(x, null) != null && !filterColumn.GetValue(x, null).ToString().ToLower().Contains(filterValue.ToString().ToLower()))).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) == null ||
+                                     (EF.Property<string>(x, filterColumn.Name) != null && !EF.Property<string>(x, filterColumn.Name).ToLower().Contains(filterValue.ToString().ToLower())));
                     break;
                 case FilterOptions.IsEmpty:
-                    data = data.Where(x => filterColumn.GetValue(x, null) == null ||
-                                     (filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString() == string.Empty)).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) == null ||
+                                     (EF.Property<string>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name) == string.Empty));
                     break;
                 case FilterOptions.IsNotEmpty:
-                    data = data.Where(x => filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString() != string.Empty).ToList();
+                    data = data.Where(x => EF.Property<string>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name) != string.Empty);
                     break;
                 #endregion
 
@@ -105,11 +106,11 @@ namespace Project.Common
                 case FilterOptions.IsGreaterThan:
                     if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                     {
-                        data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) > outValue).ToList();
+                        data = data.Where(x => EF.Property<int>(x, filterColumn.Name) > outValue);
                     }
                     else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                     {
-                        data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) > dateValue).ToList();
+                        data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) > dateValue);
 
                     }
                     break;
@@ -117,11 +118,11 @@ namespace Project.Common
                 case FilterOptions.IsGreaterThanOrEqualTo:
                     if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                     {
-                        data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) >= outValue).ToList();
+                        data = data.Where(x => EF.Property<int>(x, filterColumn.Name) >= outValue);
                     }
                     else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                     {
-                        data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) >= dateValue).ToList();
+                        data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) >= dateValue);
                         break;
                     }
                     break;
@@ -129,11 +130,11 @@ namespace Project.Common
                 case FilterOptions.IsLessThan:
                     if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                     {
-                        data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) < outValue).ToList();
+                        data = data.Where(x => EF.Property<int>(x, filterColumn.Name) < outValue);
                     }
                     else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                     {
-                        data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) < dateValue).ToList();
+                        data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) < dateValue);
                         break;
                     }
                     break;
@@ -141,11 +142,11 @@ namespace Project.Common
                 case FilterOptions.IsLessThanOrEqualTo:
                     if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                     {
-                        data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) <= outValue).ToList();
+                        data = data.Where(x => EF.Property<int>(x, filterColumn.Name) <= outValue);
                     }
                     else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                     {
-                        data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) <= dateValue).ToList();
+                        data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) <= dateValue);
                         break;
                     }
                     break;
@@ -153,23 +154,23 @@ namespace Project.Common
                 case FilterOptions.IsEqualTo:
                     if (filterValue == string.Empty)
                     {
-                        data = data.Where(x => filterColumn.GetValue(x, null) == null
-                                        || (filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower() == string.Empty)).ToList();
+                        data = data.Where(x => EF.Property<object>(x, filterColumn.Name) == null
+                                        || (EF.Property<object>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToString().ToLower() == string.Empty));
                     }
                     else
                     {
                         if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                         {
-                            data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) == outValue).ToList();
+                            data = data.Where(x => EF.Property<int>(x, filterColumn.Name) == outValue);
                         }
                         else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                         {
-                            data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) == dateValue).ToList();
+                            data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) == dateValue);
                             break;
                         }
                         else
                         {
-                            data = data.Where(x => filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower() == filterValue.ToLower()).ToList();
+                            data = data.Where(x => EF.Property<object>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToString().ToLower() == filterValue.ToLower());
                         }
                     }
                     break;
@@ -177,17 +178,17 @@ namespace Project.Common
                 case FilterOptions.IsNotEqualTo:
                     if ((filterColumn.PropertyType == typeof(Int32) || filterColumn.PropertyType == typeof(Nullable<Int32>)) && Int32.TryParse(filterValue, out outValue))
                     {
-                        data = data.Where(x => Convert.ToInt32(filterColumn.GetValue(x, null)) != outValue).ToList();
+                        data = data.Where(x => EF.Property<int>(x, filterColumn.Name) != outValue);
                     }
                     else if ((filterColumn.PropertyType == typeof(Nullable<DateTime>)) && DateTime.TryParse(filterValue, out dateValue))
                     {
-                        data = data.Where(x => Convert.ToDateTime(filterColumn.GetValue(x, null)) != dateValue).ToList();
+                        data = data.Where(x => EF.Property<DateTime>(x, filterColumn.Name) != dateValue);
                         break;
                     }
                     else
                     {
-                        data = data.Where(x => filterColumn.GetValue(x, null) == null ||
-                                         (filterColumn.GetValue(x, null) != null && filterColumn.GetValue(x, null).ToString().ToLower() != filterValue.ToLower())).ToList();
+                        data = data.Where(x => EF.Property<object>(x, filterColumn.Name) == null ||
+                                         (EF.Property<object>(x, filterColumn.Name) != null && EF.Property<string>(x, filterColumn.Name).ToLower() != filterValue.ToLower()));
                     }
                     break;
                     #endregion

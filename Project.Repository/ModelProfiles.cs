@@ -8,14 +8,19 @@ using System.Text;
 
 namespace Project.Repository
 {
-    public class MakeProfile : Profile
+    public class ModelProfiles : Profile
     {
-        public MakeProfile()
+        public ModelProfiles()
         {
             CreateMap<VehicleMake, VehicleMakeEntity>().PreserveReferences();
             CreateMap<VehicleMakeEntity, VehicleMake>().PreserveReferences();
             CreateMap<VehicleMakeEntity, IVehicleMake>().PreserveReferences();
             CreateMap<IVehicleMake, VehicleMakeEntity>().PreserveReferences();
+
+            CreateMap<VehicleModel, VehicleModelEntity>().PreserveReferences();
+            CreateMap<VehicleModelEntity, VehicleModel>().PreserveReferences();
+            CreateMap<VehicleModelEntity, IVehicleModel>().PreserveReferences();
+            CreateMap<IVehicleModel, VehicleModelEntity>().PreserveReferences();
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,10 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Common;
 using Project.DAL.Entities;
 using Project.Models;
-using Project.Models.Common;
 using Project.Service.Common;
 using Project.WebAPI.Models;
-using Project.WebAPI.Profiles;
 using Project.WebAPI.ViewModels;
 
 namespace Project.WebAPI.Controllers
@@ -37,7 +33,7 @@ namespace Project.WebAPI.Controllers
             string filterValue = "", int filterOption = 3, string sortBy = "",
             int sortOrder = 1, int pageSize = 10, int page = 1)
         {
-            GetParams getParams = new GetParams()
+            GetParams<VehicleModelEntity> getParams = new GetParams<VehicleModelEntity>()
             {
                 PageNumber = page,
                 PageSize = pageSize
@@ -57,7 +53,7 @@ namespace Project.WebAPI.Controllers
             };
 
             getParams.FilterParam = new[] { filterParams };
-            getParams.SortingParams = new[] { sortingParams };
+            getParams.SortingParam = new[] { sortingParams };
 
             return Mapper.Map<List<VehicleModelModel>>(await Service.GetVehicleModelAsync(getParams));
         }

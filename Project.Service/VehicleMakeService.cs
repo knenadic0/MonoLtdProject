@@ -1,5 +1,6 @@
 ﻿using Project.Common;
 using Project.DAL.Entities;
+using Project.Models;
 using Project.Models.Common;
 using Project.Repository.Common;
 using Project.Service.Common;
@@ -32,7 +33,7 @@ namespace Project.Service
             await Repository.CommitAsync();
         }
 
-        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams getParams)
+        public async Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams<VehicleMake> getParams)
         {
             return await Repository.GetVehicleMakeAsync();
         }

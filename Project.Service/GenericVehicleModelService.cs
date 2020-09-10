@@ -38,7 +38,7 @@ namespace Project.Service
             await unitOfWork.SaveAsync();
         }
 
-        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams getParams)
+        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModelEntity> getParams)
         {
             return Mapper.Map<ICollection<IVehicleModel>>(await Repository.Get(getParams));
         }

@@ -12,7 +12,7 @@ namespace Project.Service.Common
 {
     public interface IVehicleModelService
     {
-        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams getParams);
+        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModelEntity> getParams);
 
         Task<IVehicleModel> GetVehicleModelAsync(int id);
 

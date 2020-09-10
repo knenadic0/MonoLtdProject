@@ -13,7 +13,7 @@ namespace Project.Service.Common
 {
     public interface IVehicleMakeService
     {
-        Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams getParams);
+        Task<IEnumerable<IVehicleMake>> GetVehicleMakeAsync(GetParams<VehicleMake> getParams);
 
         Task<IVehicleMake> GetVehicleMakeAsync(int id);
 
