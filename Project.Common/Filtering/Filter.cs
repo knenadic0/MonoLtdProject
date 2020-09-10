@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Common.Filtering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,9 @@ namespace Project.Common
         public FilterOptions FilterOption { get; set; } = FilterOptions.Contains;
     }
 
-    public class Filter<T> where T : class
+    public class Filter<T> : IFilter<T> where T : class
     {
-        public static IQueryable<T> FilteredData(IQueryable<T> data, IEnumerable<FilterParams> filterParams)
+        public IQueryable<T> FilteredData(IQueryable<T> data, IEnumerable<FilterParams> filterParams)
         {
             if (filterParams == null)
             {
@@ -70,7 +71,7 @@ namespace Project.Common
             return data;
         }
 
-        private static IQueryable<T> FilterData(FilterOptions filterOption, IQueryable<T> data, PropertyInfo filterColumn, string filterValue)
+        private IQueryable<T> FilterData(FilterOptions filterOption, IQueryable<T> data, PropertyInfo filterColumn, string filterValue)
         {
             int outValue;
             DateTime dateValue;

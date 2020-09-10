@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Linq.Dynamic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Project.Common.Sorting;
 
 namespace Project.Common
 {
@@ -20,9 +21,9 @@ namespace Project.Common
         public string ColumnName { get; set; }
     }
 
-    public class Sort<T> where T : class
+    public class Sort<T> : ISort<T> where T : class
     {
-        public static IQueryable<T> SortData(IQueryable<T> data, IEnumerable<SortingParams> sortingParams)
+        public IQueryable<T> SortData(IQueryable<T> data, IEnumerable<SortingParams> sortingParams)
         {
             if (sortingParams == null)
             {

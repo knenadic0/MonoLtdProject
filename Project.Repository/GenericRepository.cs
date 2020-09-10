@@ -8,6 +8,9 @@ using Project.DAL;
 using System.Threading.Tasks;
 using PagedList;
 using Project.Common;
+using Project.Common.Filtering;
+using Project.Common.Sorting;
+using Project.Common.Paging;
 
 namespace Project.Repository
 {
@@ -15,10 +18,16 @@ namespace Project.Repository
     {
         internal VehicleContext context;
         internal DbSet<TEntity> dbSet;
+        private readonly IFilter<TEntity> filter;
+        private readonly ISort<TEntity> sorter;
+        private readonly IPage pager;
 
-        public GenericRepository(VehicleContext context)
+        public GenericRepository(VehicleContext context, IFilter<TEntity> filter, ISort<TEntity> sorter, IPage pager)
         {
             this.context = context;
+            this.filter = filter;
+            this.sorter = sorter;
+            this.pager = pager;
             this.dbSet = context.Set<TEntity>();
         }
 
@@ -26,9 +35,9 @@ namespace Project.Repository
         {
             IQueryable<TEntity> query = dbSet;
 
-            query = Filter<TEntity>.FilteredData(query, getParams.FilterParam);
-            query = Sort<TEntity>.SortData(query, getParams.SortingParam);
-            return (await PagedResult<TEntity>.GetPagedAsync(query, getParams.PageNumber, getParams.PageSize)).Results;
+            query = filter.FilteredData(query, getParams.FilterParam);
+            query = sorter.SortData(query, getParams.SortingParam);
+            return (await pager.GetPagedAsync(query, getParams.PageNumber, getParams.PageSize)).Results;
         }
 
         public virtual async Task<TEntity> GetByID(object id)

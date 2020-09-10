@@ -1,4 +1,6 @@
-﻿using Project.DAL;
+﻿using Project.Common;
+using Project.Common.Filtering;
+using Project.DAL;
 using Project.DAL.Entities;
 using Project.Models;
 using System;
@@ -21,7 +23,9 @@ namespace Project.Repository
 
                 if (this.vehicleMakeRepository == null)
                 {
-                    this.vehicleMakeRepository = new GenericRepository<VehicleMakeEntity>(context);
+                    this.vehicleMakeRepository = 
+                        new GenericRepository<VehicleMakeEntity>(context, new Filter<VehicleMakeEntity>(),
+                        new Sort<VehicleMakeEntity>(), new PagedResult<VehicleMakeEntity>());
                 }
                 return vehicleMakeRepository;
             }
@@ -34,7 +38,9 @@ namespace Project.Repository
 
                 if (this.vehicleModelRepository == null)
                 {
-                    this.vehicleModelRepository = new GenericRepository<VehicleModelEntity>(context);
+                    this.vehicleModelRepository = 
+                        new GenericRepository<VehicleModelEntity>(context, new Filter<VehicleModelEntity>(),
+                        new Sort<VehicleModelEntity>(), new PagedResult<VehicleModelEntity>());
                 }
                 return vehicleModelRepository;
             }

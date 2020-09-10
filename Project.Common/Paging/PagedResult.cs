@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.Common.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Project.Common
         }
     }
 
-    public class PagedResult<T> : PagedResultBase where T : class
+    public class PagedResult<T> : PagedResultBase, IPage where T : class
     {
         public IList<T> Results { get; set; }
 
@@ -34,7 +35,7 @@ namespace Project.Common
             Results = new List<T>();
         }
 
-        public static async Task<PagedResult<O>> GetPagedAsync<O>(IQueryable<O> query,
+        public async Task<PagedResult<O>> GetPagedAsync<O>(IQueryable<O> query,
                                          int page, int pageSize) where O : class
         {
             PagedResult<O> result = new PagedResult<O>
