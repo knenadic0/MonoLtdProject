@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Project.Common.Sorting
 {
-    public interface ISort<T>
+    public interface ISort
     {
-        public IQueryable<T> SortData(IQueryable<T> data, IEnumerable<SortingParams> sortingParams);
+        public IQueryable<T> SortData<T>(IQueryable<T> data, IEnumerable<SortingParams> sortingParams);
     }
 }

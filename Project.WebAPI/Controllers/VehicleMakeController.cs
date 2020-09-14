@@ -14,6 +14,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 using Project.DAL.Entities;
+using Project.Common.Filtering;
+using Project.Common.Sorting;
+using Project.Common.Paging;
 
 namespace Project.WebAPI.Controllers
 {
@@ -23,11 +26,17 @@ namespace Project.WebAPI.Controllers
     {
         protected IVehicleMakeService Service { get; private set; }
         protected IMapper Mapper { get; private set; }
+        public IFilter Filter { get; private set; }
+        public ISort Sort { get; private set; }
+        public IPage Page { get; private set; }
 
-        public VehicleMakeController(IVehicleMakeService service, IMapper mapper)
+        public VehicleMakeController(IVehicleMakeService service, IMapper mapper, IFilter filter, ISort sort, IPage page)
         {
             Service = service;
             Mapper = mapper;
+            Filter = filter;
+            Sort = sort;
+            Page = page;
         }
 
         [HttpGet]
@@ -56,6 +65,10 @@ namespace Project.WebAPI.Controllers
 
             getParams.FilterParam = new[] { filterParams };
             getParams.SortingParam = new[] { sortingParams };
+
+            getParams.Filter = Filter;
+            getParams.Sort = Sort;
+            getParams.Page = Page;
 
             return Mapper.Map<List<VehicleMakeModel>>(await Service.GetVehicleMakeAsync(getParams));
         }

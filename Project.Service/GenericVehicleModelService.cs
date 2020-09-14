@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Project.Common;
 using Project.DAL.Entities;
+using Project.Models;
 using Project.Models.Common;
 using Project.Repository;
 using Project.Service.Common;
@@ -38,9 +39,9 @@ namespace Project.Service
             await unitOfWork.SaveAsync();
         }
 
-        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModelEntity> getParams)
+        public async Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModel> getParams)
         {
-            return Mapper.Map<ICollection<IVehicleModel>>(await Repository.Get(getParams));
+            return Mapper.Map<ICollection<IVehicleModel>>(await Repository.Get(Mapper.Map<GetParams<VehicleModelEntity>>(getParams)));
         }
 
         public async Task<IVehicleModel> GetVehicleModelAsync(int id)

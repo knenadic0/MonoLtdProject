@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Project.Common;
+using Project.Common.Filtering;
+using Project.Common.Paging;
+using Project.Common.Sorting;
 using Project.DAL.Entities;
 using Project.Models;
 using Project.Service.Common;
@@ -21,11 +24,17 @@ namespace Project.WebAPI.Controllers
     {
         protected IVehicleModelService Service { get; private set; }
         protected IMapper Mapper { get; private set; }
+        public IFilter Filter { get; private set; }
+        public ISort Sort { get; private set; }
+        public IPage Page { get; private set; }
 
-        public VehicleModelController(IVehicleModelService service, IMapper mapper)
+        public VehicleModelController(IVehicleModelService service, IMapper mapper, IFilter filter, ISort sort, IPage page)
         {
             Service = service;
             Mapper = mapper;
+            Filter = filter;
+            Sort = sort;
+            Page = page;
         }
 
         [HttpGet]
@@ -33,7 +42,7 @@ namespace Project.WebAPI.Controllers
             string filterValue = "", int filterOption = 3, string sortBy = "",
             int sortOrder = 1, int pageSize = 10, int page = 1)
         {
-            GetParams<VehicleModelEntity> getParams = new GetParams<VehicleModelEntity>()
+            GetParams<VehicleModel> getParams = new GetParams<VehicleModel>()
             {
                 PageNumber = page,
                 PageSize = pageSize
@@ -54,6 +63,10 @@ namespace Project.WebAPI.Controllers
 
             getParams.FilterParam = new[] { filterParams };
             getParams.SortingParam = new[] { sortingParams };
+
+            getParams.Filter = Filter;
+            getParams.Sort = Sort;
+            getParams.Page = Page;
 
             return Mapper.Map<List<VehicleModelModel>>(await Service.GetVehicleModelAsync(getParams));
         }

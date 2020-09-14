@@ -24,8 +24,7 @@ namespace Project.Repository
                 if (this.vehicleMakeRepository == null)
                 {
                     this.vehicleMakeRepository = 
-                        new GenericRepository<VehicleMakeEntity>(context, new Filter<VehicleMakeEntity>(),
-                        new Sort<VehicleMakeEntity>(), new PagedResult<VehicleMakeEntity>());
+                        new GenericRepository<VehicleMakeEntity>(context);
                 }
                 return vehicleMakeRepository;
             }
@@ -39,8 +38,7 @@ namespace Project.Repository
                 if (this.vehicleModelRepository == null)
                 {
                     this.vehicleModelRepository = 
-                        new GenericRepository<VehicleModelEntity>(context, new Filter<VehicleModelEntity>(),
-                        new Sort<VehicleModelEntity>(), new PagedResult<VehicleModelEntity>());
+                        new GenericRepository<VehicleModelEntity>(context);
                 }
                 return vehicleModelRepository;
             }

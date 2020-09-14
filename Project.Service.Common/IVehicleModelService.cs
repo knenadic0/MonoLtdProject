@@ -1,5 +1,6 @@
 ﻿using Project.Common;
 using Project.DAL.Entities;
+using Project.Models;
 using Project.Models.Common;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Project.Service.Common
 {
     public interface IVehicleModelService
     {
-        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModelEntity> getParams);
+        Task<ICollection<IVehicleModel>> GetVehicleModelAsync(GetParams<VehicleModel> getParams);
 
         Task<IVehicleModel> GetVehicleModelAsync(int id);
 

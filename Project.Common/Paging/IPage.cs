@@ -8,6 +8,6 @@ namespace Project.Common.Paging
 {
     public interface IPage
     {
-        Task<PagedResult<O>> GetPagedAsync<O>(IQueryable<O> query, int page, int pageSize) where O : class;
+        Task<IEnumerable<T>> GetPagedAsync<T>(IQueryable<T> query, int page, int pageSize) where T : class;
     }
 }

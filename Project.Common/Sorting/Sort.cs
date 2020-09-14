@@ -21,9 +21,9 @@ namespace Project.Common
         public string ColumnName { get; set; }
     }
 
-    public class Sort<T> : ISort<T> where T : class
+    public class Sort : ISort
     {
-        public IQueryable<T> SortData(IQueryable<T> data, IEnumerable<SortingParams> sortingParams)
+        public IQueryable<T> SortData<T>(IQueryable<T> data, IEnumerable<SortingParams> sortingParams)
         {
             if (sortingParams == null)
             {

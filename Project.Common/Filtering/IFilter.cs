@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Project.Common.Filtering
 {
-    public interface IFilter<T>
+    public interface IFilter
     {
-        public IQueryable<T> FilteredData(IQueryable<T> data, IEnumerable<FilterParams> filterParams);
+        public IQueryable<T> FilteredData<T>(IQueryable<T> data, IEnumerable<FilterParams> filterParams);
     }
 }

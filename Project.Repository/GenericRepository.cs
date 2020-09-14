@@ -18,16 +18,10 @@ namespace Project.Repository
     {
         internal VehicleContext context;
         internal DbSet<TEntity> dbSet;
-        private readonly IFilter<TEntity> filter;
-        private readonly ISort<TEntity> sorter;
-        private readonly IPage pager;
 
-        public GenericRepository(VehicleContext context, IFilter<TEntity> filter, ISort<TEntity> sorter, IPage pager)
+        public GenericRepository(VehicleContext context)
         {
             this.context = context;
-            this.filter = filter;
-            this.sorter = sorter;
-            this.pager = pager;
             this.dbSet = context.Set<TEntity>();
         }
 
@@ -35,9 +29,9 @@ namespace Project.Repository
         {
             IQueryable<TEntity> query = dbSet;
 
-            query = filter.FilteredData(query, getParams.FilterParam);
-            query = sorter.SortData(query, getParams.SortingParam);
-            return (await pager.GetPagedAsync(query, getParams.PageNumber, getParams.PageSize)).Results;
+            query = getParams.Filter.FilteredData(query, getParams.FilterParam);
+            query = getParams.Sort.SortData(query, getParams.SortingParam);
+            return (await getParams.Page.GetPagedAsync(query, getParams.PageNumber, getParams.PageSize));
         }
 
         public virtual async Task<TEntity> GetByID(object id)

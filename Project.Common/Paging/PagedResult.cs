@@ -26,19 +26,12 @@ namespace Project.Common
         }
     }
 
-    public class PagedResult<T> : PagedResultBase, IPage where T : class
+    public class PagedResult : PagedResultBase, IPage
     {
-        public IList<T> Results { get; set; }
-
-        public PagedResult()
+        public async Task<IEnumerable<T>> GetPagedAsync<T>(IQueryable<T> query,
+                                         int page, int pageSize) where T : class
         {
-            Results = new List<T>();
-        }
-
-        public async Task<PagedResult<O>> GetPagedAsync<O>(IQueryable<O> query,
-                                         int page, int pageSize) where O : class
-        {
-            PagedResult<O> result = new PagedResult<O>
+            PagedResult result = new PagedResult
             {
                 CurrentPage = page,
                 PageSize = pageSize,
@@ -49,9 +42,7 @@ namespace Project.Common
             result.PageCount = (int)Math.Ceiling(pageCount);
 
             int skip = (page - 1) * pageSize;
-            result.Results = await query.Skip(skip).Take(pageSize).ToListAsync();
-
-            return result;
+            return await query.Skip(skip).Take(pageSize).ToListAsync();
         }
     }
 }
